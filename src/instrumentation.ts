@@ -1,3 +1,6 @@
+import type { Instrumentation } from 'next';
+import { REQUEST_ID_HEADER } from '@/server/request-id';
+
 export async function register(): Promise<void> {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     try {
@@ -7,4 +10,34 @@ export async function register(): Promise<void> {
       process.exit(1);
     }
   }
+}
+
+export const onRequestError: Instrumentation.onRequestError = async (
+  error,
+  request,
+  context,
+) => {
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    const { logger } = await import('@/server/logger');
+    const requestId = request.headers[REQUEST_ID_HEADER];
+
+    logger.error(
+      {
+        err: error,
+        digest: digestOf(error),
+        requestId: typeof requestId === 'string' ? requestId : undefined,
+        method: request.method,
+        path: request.path,
+        routeType: context.routeType,
+        routePath: context.routePath,
+      },
+      'Unhandled server error',
+    );
+  }
+};
+
+function digestOf(error: unknown): string | undefined {
+  return typeof error === 'object' && error !== null && 'digest' in error
+    ? String(error.digest)
+    : undefined;
 }

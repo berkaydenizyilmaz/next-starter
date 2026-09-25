@@ -6,6 +6,7 @@ import { z } from 'zod';
 export const env = createEnv({
   server: {
     API_URL: z.url(),
+    LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
   },
   experimental__runtimeEnv: process.env,
   emptyStringAsUndefined: true,
