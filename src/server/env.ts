@@ -6,6 +6,7 @@ import { z } from 'zod';
 export const env = createEnv({
   server: {
     API_URL: z.url(),
+    TRUST_PROXY_HOPS: z.coerce.number().int().min(1).default(1),
     LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
   },
   experimental__runtimeEnv: process.env,
