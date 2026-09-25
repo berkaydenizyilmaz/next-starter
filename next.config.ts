@@ -1,8 +1,11 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'standalone',
   reactCompiler: true,
+  cacheComponents: true,
+  typedRoutes: true,
+  agentRules: false,
 };
 
 export default nextConfig;
