@@ -1,11 +1,11 @@
 import { cn } from 'cn';
 import type { Metadata } from 'next';
 import { type ReactNode, Suspense } from 'react';
+import { FlashMessage } from '@/app/flash-message';
 import { fontSans } from '@/app/fonts';
 import { QueryProvider } from '@/components/query-provider';
 import { THEME_SCRIPT } from '@/components/theme/theme.script';
 import { Toaster } from '@/components/ui/sonner';
-import { FlashMessage } from '@/features/flash/components/flash-message';
 import { APP_LOCALE, APP_NAME } from '@/lib/constants/app.constants';
 import './globals.css';
 
