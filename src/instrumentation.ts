@@ -1,5 +1,5 @@
 import type { Instrumentation } from 'next';
-import { REQUEST_ID_HEADER } from '@/server/request-id';
+import { REQUEST_ID_HEADER } from '@/server/request-context';
 
 export async function register(): Promise<void> {
   if (process.env.NEXT_RUNTIME === 'nodejs') {

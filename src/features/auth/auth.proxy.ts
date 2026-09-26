@@ -11,7 +11,7 @@ import {
   type SessionCookie,
   sessionCookie,
   sessionFromCookie,
-} from '@/features/auth/session';
+} from '@/features/auth/session.cookie';
 import * as api from '@/lib/api';
 import { HTTP_STATUS } from '@/lib/constants/http.constants';
 import { PUBLIC_ROUTES, ROUTE } from '@/lib/constants/route.constants';

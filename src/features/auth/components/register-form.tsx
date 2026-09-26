@@ -11,7 +11,7 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { register } from '@/features/auth/auth.actions';
+import { registerAction } from '@/features/auth/auth.actions';
 import { REDIRECT_PARAM } from '@/features/auth/auth.constants';
 import { idleFormState } from '@/lib/form/form.types';
 
@@ -20,7 +20,7 @@ export function RegisterForm({
 }: {
   redirectTo?: string;
 }): ReactNode {
-  const [state, action] = useActionState(register, idleFormState());
+  const [state, action] = useActionState(registerAction, idleFormState());
 
   return (
     <Form action={action}>

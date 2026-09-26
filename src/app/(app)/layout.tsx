@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { type ReactNode, Suspense } from 'react';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { getCurrentUser } from '@/features/auth/auth.data';
 import { SignOutButton } from '@/features/auth/components/sign-out-button';
-import { getCurrentUser } from '@/features/auth/current-user';
 import { APP_NAME } from '@/lib/constants/app.constants';
 import { ROUTE } from '@/lib/constants/route.constants';
 

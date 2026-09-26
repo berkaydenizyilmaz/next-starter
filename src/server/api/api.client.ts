@@ -3,10 +3,13 @@ import { headers } from 'next/headers';
 import { type Client, createClient, createConfig } from '@/lib/api/client';
 import { MS_PER_SECOND } from '@/lib/constants/time.constants';
 import { isTransportError, toApiError } from '@/server/api/api.error';
-import { resolveClientIp } from '@/server/client-ip';
 import { env } from '@/server/env';
 import { requestLogger } from '@/server/logger';
-import { type IncomingHeaders, REQUEST_ID_HEADER } from '@/server/request-id';
+import {
+  type IncomingHeaders,
+  REQUEST_ID_HEADER,
+  resolveClientIp,
+} from '@/server/request-context';
 
 const API_TIMEOUT_MS = 10 * MS_PER_SECOND;
 const PASSED_THROUGH_HEADERS = [

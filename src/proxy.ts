@@ -1,6 +1,6 @@
 import type { NextRequest, NextResponse } from 'next/server';
 import { authenticate } from '@/features/auth/auth.proxy';
-import { REQUEST_ID_HEADER, resolveRequestId } from '@/server/request-id';
+import { REQUEST_ID_HEADER, resolveRequestId } from '@/server/request-context';
 
 export async function proxy(request: NextRequest): Promise<NextResponse> {
   const requestId = resolveRequestId(request.headers);

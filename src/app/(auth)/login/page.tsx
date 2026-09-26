@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { type ReactNode, Suspense } from 'react';
-import { REDIRECT_PARAM } from '@/features/auth/auth.constants';
+import { redirectQuery, redirectTarget } from '@/features/auth/auth.util';
 import { LoginForm } from '@/features/auth/components/login-form';
 import { ROUTE } from '@/lib/constants/route.constants';
 
@@ -25,18 +25,17 @@ export default function LoginPage({
 async function LoginSection({
   searchParams,
 }: Pick<PageProps<'/login'>, 'searchParams'>): Promise<ReactNode> {
-  const redirectTo = (await searchParams)[REDIRECT_PARAM];
-  const next = typeof redirectTo === 'string' ? redirectTo : undefined;
+  const target = redirectTarget(await searchParams);
 
   return (
     <>
-      <LoginForm redirectTo={next} />
+      <LoginForm redirectTo={target} />
       <p className="text-sm text-muted-foreground">
         Hesabın yok mu?{' '}
         <Link
           href={{
             pathname: ROUTE.REGISTER,
-            query: next ? { [REDIRECT_PARAM]: next } : {},
+            query: redirectQuery(target),
           }}
           className="text-foreground underline underline-offset-4"
         >

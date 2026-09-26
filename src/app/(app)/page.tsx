@@ -1,5 +1,5 @@
 import { type ReactNode, Suspense } from 'react';
-import { getCurrentUser } from '@/features/auth/current-user';
+import { getCurrentUser } from '@/features/auth/auth.data';
 
 export default function Home(): ReactNode {
   return (

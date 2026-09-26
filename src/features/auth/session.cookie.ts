@@ -1,18 +1,12 @@
 import 'server-only';
 import { sealData, unsealData } from 'iron-session';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import type * as api from '@/lib/api';
-import type { Client } from '@/lib/api/client';
-import { HTTP_STATUS } from '@/lib/constants/http.constants';
-import { ROUTE } from '@/lib/constants/route.constants';
 import { MS_PER_SECOND } from '@/lib/constants/time.constants';
-import { apiClient } from '@/server/api/api.client';
-import { ApiError } from '@/server/api/api.error';
 import { env } from '@/server/env';
 import { requestLogger } from '@/server/logger';
-import type { IncomingHeaders } from '@/server/request-id';
+import type { IncomingHeaders } from '@/server/request-context';
 
 export const SESSION_COOKIE_NAME = '__Host-session';
 
@@ -104,22 +98,4 @@ export async function saveSession(tokens: api.TokenPair): Promise<void> {
 export async function clearSession(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(expiredSessionCookie());
-}
-
-export async function sessionClient(): Promise<Client> {
-  const session = await readSession();
-  if (!session) redirect(ROUTE.LOGIN);
-
-  const client = await apiClient({ accessToken: session.accessToken });
-  client.interceptors.error.use((error) => {
-    if (
-      error instanceof ApiError &&
-      error.status === HTTP_STATUS.UNAUTHORIZED
-    ) {
-      redirect(ROUTE.LOGIN);
-    }
-    return error;
-  });
-
-  return client;
 }

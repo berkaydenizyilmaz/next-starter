@@ -11,12 +11,12 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { login } from '@/features/auth/auth.actions';
+import { loginAction } from '@/features/auth/auth.actions';
 import { REDIRECT_PARAM } from '@/features/auth/auth.constants';
 import { idleFormState } from '@/lib/form/form.types';
 
 export function LoginForm({ redirectTo }: { redirectTo?: string }): ReactNode {
-  const [state, action] = useActionState(login, idleFormState());
+  const [state, action] = useActionState(loginAction, idleFormState());
 
   return (
     <Form action={action}>

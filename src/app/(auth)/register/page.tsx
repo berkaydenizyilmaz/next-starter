@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { type ReactNode, Suspense } from 'react';
-import { REDIRECT_PARAM } from '@/features/auth/auth.constants';
+import { redirectQuery, redirectTarget } from '@/features/auth/auth.util';
 import { RegisterForm } from '@/features/auth/components/register-form';
 import { ROUTE } from '@/lib/constants/route.constants';
 
@@ -25,18 +25,17 @@ export default function RegisterPage({
 async function RegisterSection({
   searchParams,
 }: Pick<PageProps<'/register'>, 'searchParams'>): Promise<ReactNode> {
-  const redirectTo = (await searchParams)[REDIRECT_PARAM];
-  const next = typeof redirectTo === 'string' ? redirectTo : undefined;
+  const target = redirectTarget(await searchParams);
 
   return (
     <>
-      <RegisterForm redirectTo={next} />
+      <RegisterForm redirectTo={target} />
       <p className="text-sm text-muted-foreground">
         Zaten hesabın var mı?{' '}
         <Link
           href={{
             pathname: ROUTE.LOGIN,
-            query: next ? { [REDIRECT_PARAM]: next } : {},
+            query: redirectQuery(target),
           }}
           className="text-foreground underline underline-offset-4"
         >

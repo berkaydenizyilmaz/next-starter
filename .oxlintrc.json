@@ -9,5 +9,76 @@
     "browser": true,
     "node": true
   },
-  "ignorePatterns": ["src/lib/api/**"]
+  "ignorePatterns": ["src/lib/api/**"],
+  "overrides": [
+    {
+      "files": ["src/lib/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "@/server/**",
+                  "@/features/**",
+                  "@/components/**",
+                  "@/app/**"
+                ],
+                "message": "lib is the lowest layer and is shared with the client; it cannot depend on server, features, components or app."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/components/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/server/**", "@/features/**", "@/app/**"],
+                "message": "Shared components know no feature or server code; pass data in through props."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/server/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/features/**", "@/components/**", "@/app/**"],
+                "message": "server is domain-agnostic infrastructure; it cannot depend on features, components or app."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/features/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/app/**"],
+                "message": "Features cannot depend on the app layer; app composes features."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }
