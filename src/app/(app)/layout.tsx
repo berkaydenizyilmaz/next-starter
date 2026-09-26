@@ -10,9 +10,17 @@ export default function AppLayout({ children }: LayoutProps<'/'>): ReactNode {
   return (
     <>
       <header className="flex items-center justify-between gap-4 border-b px-4 py-3">
-        <Link href={ROUTE.HOME} className="font-semibold">
-          {APP_NAME}
-        </Link>
+        <nav className="flex items-center gap-4">
+          <Link href={ROUTE.HOME} className="font-semibold">
+            {APP_NAME}
+          </Link>
+          <Link
+            href={ROUTE.SECURITY_LOG}
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
+            Güvenlik günlüğü
+          </Link>
+        </nav>
         <div className="flex items-center gap-2">
           <ThemeToggle />
           <Suspense fallback={null}>
