@@ -1,5 +1,4 @@
 import type { Instrumentation } from 'next';
-import { REQUEST_ID_HEADER } from '@/server/request-context';
 
 export async function register(): Promise<void> {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
@@ -19,6 +18,7 @@ export const onRequestError: Instrumentation.onRequestError = async (
 ) => {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     const { logger } = await import('@/server/logger');
+    const { REQUEST_ID_HEADER } = await import('@/server/request-context');
     const requestId = request.headers[REQUEST_ID_HEADER];
 
     logger.error(

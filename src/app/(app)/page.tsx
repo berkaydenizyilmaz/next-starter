@@ -1,7 +1,7 @@
 import { type ReactNode, Suspense } from 'react';
 import { getCurrentUser } from '@/features/auth/auth.data';
 
-export default function Home(): ReactNode {
+export default function HomePage(): ReactNode {
   return (
     <main className="px-4 py-8">
       <Suspense fallback={null}>

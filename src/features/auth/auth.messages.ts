@@ -1,5 +1,5 @@
 import { AUTH_ERROR } from '@/features/auth/auth.constants';
-import type { ErrorMessages } from '@/lib/errors/error.messages';
+import type { ErrorMessages } from '@/lib/messages/error.messages';
 
 export const AUTH_ERROR_MESSAGES: ErrorMessages = {
   [AUTH_ERROR.INVALID_CREDENTIALS]: 'E-posta ya da şifre hatalı.',

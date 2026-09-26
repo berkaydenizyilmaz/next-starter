@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { ErrorMessages } from '@/lib/errors/error.messages';
+import type { ErrorMessages } from '@/lib/messages/error.messages';
 
 const REQUIRED_MESSAGE = 'Bu alan zorunlu.';
 const INVALID_FORMAT_MESSAGE = 'Geçersiz biçim.';

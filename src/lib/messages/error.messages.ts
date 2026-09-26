@@ -1,4 +1,4 @@
-import { COMMON_ERROR } from '@/lib/errors/error.constants';
+import { COMMON_ERROR } from '@/lib/constants/error.constants';
 
 export type ErrorMessages = Readonly<Partial<Record<string, string>>>;
 

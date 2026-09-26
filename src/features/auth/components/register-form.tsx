@@ -13,7 +13,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { registerAction } from '@/features/auth/auth.actions';
 import { REDIRECT_PARAM } from '@/features/auth/auth.constants';
-import { idleFormState } from '@/lib/form/form.types';
+import { idleFormState } from '@/lib/utils/form.util';
 
 export function RegisterForm({
   redirectTo,

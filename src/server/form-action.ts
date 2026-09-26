@@ -1,8 +1,14 @@
 import 'server-only';
 import { z } from 'zod';
-import { type ErrorMessages, errorMessage } from '@/lib/errors/error.messages';
-import { formErrorMap, ISSUE_CODE_MESSAGES } from '@/lib/form/form.messages';
-import type { FormState, FormValue } from '@/lib/form/form.types';
+import type { FormState, FormValue } from '@/lib/form.types';
+import {
+  type ErrorMessages,
+  errorMessage,
+} from '@/lib/messages/error.messages';
+import {
+  formErrorMap,
+  ISSUE_CODE_MESSAGES,
+} from '@/lib/messages/form.messages';
 import { ApiError } from '@/server/api/api.error';
 
 type FieldName<TSchema extends z.ZodObject> = Extract<

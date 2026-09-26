@@ -7,7 +7,7 @@ import { login, logout, register } from '@/features/auth/auth.data';
 import { AUTH_ERROR_MESSAGES } from '@/features/auth/auth.messages';
 import { zLoginRequest, zRegisterRequest } from '@/lib/api/zod.gen';
 import { ROUTE } from '@/lib/constants/route.constants';
-import { internalPath } from '@/lib/url.util';
+import { internalPath } from '@/lib/utils/url.util';
 import { formAction } from '@/server/form-action';
 
 const redirectField = { [REDIRECT_PARAM]: z.string().optional() };

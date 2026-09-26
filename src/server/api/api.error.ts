@@ -1,10 +1,11 @@
 import 'server-only';
-import type { ValidationIssue } from '@/lib/api';
+import type * as api from '@/lib/api';
 import { zErrorResponse } from '@/lib/api/zod.gen';
+import { COMMON_ERROR } from '@/lib/constants/error.constants';
 import { HTTP_STATUS } from '@/lib/constants/http.constants';
-import { COMMON_ERROR } from '@/lib/errors/error.constants';
 
 const TIMEOUT_ERROR_NAME = 'TimeoutError';
+const RETRY_AFTER_HEADER = 'retry-after';
 
 const TRANSPORT_ERROR_CODES: ReadonlySet<string> = new Set([
   COMMON_ERROR.API_UNREACHABLE,
@@ -15,7 +16,7 @@ const TRANSPORT_ERROR_CODES: ReadonlySet<string> = new Set([
 export class ApiError extends Error {
   readonly code: string;
   readonly status: number;
-  readonly fieldErrors: ValidationIssue[];
+  readonly fieldErrors: api.ValidationIssue[];
   readonly retryAfterSeconds?: number;
 
   constructor({
@@ -29,7 +30,7 @@ export class ApiError extends Error {
     code: string;
     status: number;
     message: string;
-    fieldErrors?: ValidationIssue[];
+    fieldErrors?: api.ValidationIssue[];
     retryAfterSeconds?: number;
     cause?: unknown;
   }) {
@@ -89,6 +90,6 @@ export function isTransportError(error: ApiError): boolean {
 }
 
 function retryAfterSeconds(response: Response): number | undefined {
-  const seconds = Number(response.headers.get('Retry-After'));
+  const seconds = Number(response.headers.get(RETRY_AFTER_HEADER));
   return Number.isInteger(seconds) && seconds > 0 ? seconds : undefined;
 }

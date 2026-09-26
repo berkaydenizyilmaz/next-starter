@@ -7,10 +7,3 @@ export interface FormState<TField extends string, TData = undefined> {
   formError?: string;
   data?: TData;
 }
-
-export function idleFormState<
-  TField extends string,
-  TData = undefined,
->(): FormState<TField, TData> {
-  return { status: 'idle', values: {}, fieldErrors: {} };
-}
