@@ -1,4 +1,4 @@
-import type { FormState } from '@/lib/form.types';
+import type { FormState } from '@/lib/types/form.types';
 
 export function idleFormState<
   TField extends string,

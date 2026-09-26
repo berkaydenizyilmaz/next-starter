@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { SecurityLogList } from '@/features/user/components/security-log-list';
 import { getMySecurityLog } from '@/features/user/user.data';
 import { securityLogQuery } from '@/features/user/user.queries';
-import { getQueryClient } from '@/lib/query.client';
+import { getQueryClient } from '@/lib/clients/query.client';
 
 export async function SecurityLogSection(): Promise<ReactNode> {
   const queryClient = getQueryClient();

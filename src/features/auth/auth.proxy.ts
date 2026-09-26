@@ -15,7 +15,7 @@ import { ApiError, isTransportError } from '@/lib/api.error';
 import { HTTP_STATUS } from '@/lib/constants/http.constants';
 import { PUBLIC_ROUTES } from '@/lib/constants/route.constants';
 import { signInPath } from '@/lib/utils/url.util';
-import { createApiClient } from '@/server/api/api.client';
+import { createApiClient } from '@/server/api.client';
 import { requestLogger } from '@/server/logger';
 
 type RefreshOutcome =

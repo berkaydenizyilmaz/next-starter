@@ -2,7 +2,7 @@
 
 import { type ReactNode, useEffect } from 'react';
 import { toast } from 'sonner';
-import type { Flash } from '@/lib/flash.types';
+import type { Flash } from '@/lib/types/flash.types';
 
 export function FlashToast({
   flash,

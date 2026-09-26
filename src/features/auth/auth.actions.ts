@@ -27,7 +27,7 @@ import {
 } from '@/lib/api/zod.gen';
 import { REDIRECT_PARAM, ROUTE } from '@/lib/constants/route.constants';
 import { internalPath } from '@/lib/utils/url.util';
-import { setFlash } from '@/server/flash';
+import { setFlash } from '@/server/flash/flash.cookie';
 import { formAction } from '@/server/form-action';
 
 const redirectField = { [REDIRECT_PARAM]: z.string().optional() };

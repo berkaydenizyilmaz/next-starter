@@ -8,7 +8,7 @@ import {
   USER_FLASH_MESSAGES,
 } from '@/features/user/user.messages';
 import { ROUTE } from '@/lib/constants/route.constants';
-import { setFlash } from '@/server/flash';
+import { setFlash } from '@/server/flash/flash.cookie';
 import { formAction } from '@/server/form-action';
 
 export const deleteMeAction = formAction(

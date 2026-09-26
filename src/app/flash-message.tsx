@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { FlashToast } from '@/components/flash-toast';
-import { readFlash } from '@/server/flash';
-import { dismissFlashAction } from '@/server/flash.actions';
+import { dismissFlashAction } from '@/server/flash/flash.actions';
+import { readFlash } from '@/server/flash/flash.cookie';
 
 export async function FlashMessage(): Promise<ReactNode> {
   const flash = await readFlash();

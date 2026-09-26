@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { type ReactNode, Suspense } from 'react';
 import { redirectQuery, redirectTarget } from '@/features/auth/auth.util';
-import { SignedInRedirect } from '@/features/auth/components/signed-in-redirect';
 import { LoginForm } from '@/features/auth/components/login-form';
+import { SignedInRedirect } from '@/features/auth/components/signed-in-redirect';
 import { ROUTE } from '@/lib/constants/route.constants';
 
 export const metadata: Metadata = {

@@ -1,7 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
 import { ApiError } from '@/lib/api.error';
-import type { FormState, FormValue } from '@/lib/form.types';
 import {
   apiErrorMessage,
   type ErrorMessages,
@@ -11,6 +10,7 @@ import {
   formErrorMap,
   ISSUE_CODE_MESSAGES,
 } from '@/lib/messages/form.messages';
+import type { FormState, FormValue } from '@/lib/types/form.types';
 
 type FieldName<TSchema extends z.ZodObject> = Extract<
   keyof z.input<TSchema>,

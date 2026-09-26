@@ -2,7 +2,7 @@ import 'server-only';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
 import { MS_PER_MINUTE, MS_PER_SECOND } from '@/lib/constants/time.constants';
-import type { Flash } from '@/lib/flash.types';
+import type { Flash } from '@/lib/types/flash.types';
 
 const FLASH_COOKIE_OPTIONS = {
   name: '__Host-flash',

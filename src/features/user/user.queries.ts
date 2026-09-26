@@ -1,6 +1,6 @@
 import { infiniteQueryOptions } from '@tanstack/react-query';
 import * as api from '@/lib/api';
-import { browserApiClient } from '@/lib/browser-api.client';
+import { browserApiClient } from '@/lib/clients/browser-api.client';
 
 export const securityLogQuery = infiniteQueryOptions({
   queryKey: ['user', 'security-log'],

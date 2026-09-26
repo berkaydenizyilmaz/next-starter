@@ -10,7 +10,7 @@ import { ApiError, isTransportError } from '@/lib/api.error';
 import type { Client } from '@/lib/api/client';
 import { HTTP_STATUS } from '@/lib/constants/http.constants';
 import { ROUTE } from '@/lib/constants/route.constants';
-import { apiClient } from '@/server/api/api.client';
+import { apiClient } from '@/server/api.client';
 import { requestLogger } from '@/server/logger';
 
 export { clearSession };
