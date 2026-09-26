@@ -4,6 +4,7 @@ import { refresh } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import {
+  changePassword,
   login,
   logout,
   register,
@@ -12,6 +13,7 @@ import {
 } from '@/features/auth/auth.data';
 import { AUTH_ERROR_MESSAGES } from '@/features/auth/auth.messages';
 import {
+  zChangePasswordRequest,
   zLoginRequest,
   zRegisterRequest,
   zRevokeSessionPath,
@@ -50,6 +52,11 @@ export async function logoutAction(): Promise<void> {
   await logout();
   redirect(ROUTE.LOGIN);
 }
+
+export const changePasswordAction = formAction(
+  { schema: zChangePasswordRequest, messages: AUTH_ERROR_MESSAGES },
+  changePassword,
+);
 
 export const revokeSessionAction = formAction(
   { schema: zRevokeSessionPath, messages: AUTH_ERROR_MESSAGES },

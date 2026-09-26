@@ -64,6 +64,12 @@ export async function logout(): Promise<void> {
   await clearSession();
 }
 
+export async function changePassword(
+  input: api.ChangePasswordRequest,
+): Promise<void> {
+  await api.changePassword({ client: await sessionClient(), body: input });
+}
+
 export async function listSessions(): Promise<api.Session[]> {
   const { data } = await api.listSessions({ client: await sessionClient() });
   return data;

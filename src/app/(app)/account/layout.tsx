@@ -4,6 +4,7 @@ import { ROUTE } from '@/lib/constants/route.constants';
 
 const ACCOUNT_LINKS = [
   { href: ROUTE.SESSIONS, label: 'Oturumlar' },
+  { href: ROUTE.CHANGE_PASSWORD, label: 'Şifre' },
   { href: ROUTE.SECURITY_LOG, label: 'Güvenlik günlüğü' },
 ] as const;
 

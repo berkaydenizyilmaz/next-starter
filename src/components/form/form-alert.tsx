@@ -1,11 +1,17 @@
-import type { ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-export function FormAlert({ message }: { message?: string }): ReactNode {
+export function FormAlert({
+  message,
+  variant = 'destructive',
+}: {
+  message?: string;
+  variant?: ComponentProps<typeof Alert>['variant'];
+}): ReactNode {
   if (!message) return null;
 
   return (
-    <Alert variant="destructive">
+    <Alert variant={variant}>
       <AlertDescription>{message}</AlertDescription>
     </Alert>
   );
