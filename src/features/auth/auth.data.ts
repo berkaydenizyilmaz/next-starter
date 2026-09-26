@@ -13,6 +13,8 @@ import { ROUTE } from '@/lib/constants/route.constants';
 import { apiClient } from '@/server/api/api.client';
 import { requestLogger } from '@/server/logger';
 
+export { clearSession };
+
 export interface CurrentUser {
   id: string;
   email: string;

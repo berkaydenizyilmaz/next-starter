@@ -1,5 +1,5 @@
 import 'server-only';
-import { sessionClient } from '@/features/auth/auth.data';
+import { clearSession, sessionClient } from '@/features/auth/auth.data';
 import * as api from '@/lib/api';
 
 export async function getMe(): Promise<api.Me> {
@@ -17,4 +17,9 @@ export async function getMySecurityLog({
     query: { cursor },
   });
   return data;
+}
+
+export async function deleteMe(): Promise<void> {
+  await api.deleteMe({ client: await sessionClient() });
+  await clearSession();
 }
