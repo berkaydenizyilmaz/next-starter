@@ -23,3 +23,14 @@ export async function deleteMe(): Promise<void> {
   await api.deleteMe({ client: await sessionClient() });
   await clearSession();
 }
+
+export async function updateMyAvatar(fileId: string): Promise<void> {
+  await api.updateMyAvatar({
+    client: await sessionClient(),
+    body: { fileId },
+  });
+}
+
+export async function removeMyAvatar(): Promise<void> {
+  await api.removeMyAvatar({ client: await sessionClient() });
+}
