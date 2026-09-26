@@ -1,8 +1,8 @@
 import 'server-only';
-import type { z } from 'zod';
+import { z } from 'zod';
 import { type ErrorMessages, errorMessage } from '@/lib/errors/error.messages';
 import { formErrorMap, ISSUE_CODE_MESSAGES } from '@/lib/form/form.messages';
-import type { FormState } from '@/lib/form/form.types';
+import type { FormState, FormValue } from '@/lib/form/form.types';
 import { ApiError } from '@/server/api/api.error';
 
 type FieldName<TSchema extends z.ZodObject> = Extract<
@@ -10,26 +10,31 @@ type FieldName<TSchema extends z.ZodObject> = Extract<
   string
 >;
 
+type FormValues<TField extends string> = Partial<Record<TField, FormValue>>;
+
 interface FormActionDefinition<TSchema extends z.ZodObject> {
   schema: TSchema;
-  secretFields: readonly FieldName<TSchema>[];
+  echoFields?: readonly FieldName<TSchema>[];
   messages?: ErrorMessages;
 }
 
-type FormAction<TField extends string> = (
-  state: FormState<TField>,
+type FormAction<TField extends string, TData> = (
+  state: FormState<TField, TData>,
   formData: FormData,
-) => Promise<FormState<TField>>;
+) => Promise<FormState<TField, TData>>;
 
-export function formAction<TSchema extends z.ZodObject>(
-  { schema, secretFields, messages = {} }: FormActionDefinition<TSchema>,
-  handler: (data: z.output<TSchema>) => Promise<void>,
-): FormAction<FieldName<TSchema>> {
+export function formAction<TSchema extends z.ZodObject, TData = undefined>(
+  { schema, echoFields = [], messages = {} }: FormActionDefinition<TSchema>,
+  handler: (data: z.output<TSchema>) => Promise<TData>,
+): FormAction<FieldName<TSchema>, TData> {
   const fields = Object.keys(schema.shape) as FieldName<TSchema>[];
+  const arrayFields = new Set(
+    fields.filter((field) => isArraySchema(schema.shape[field])),
+  );
 
   return async (_state, formData) => {
-    const input = readFields(formData, fields);
-    const values = withoutSecrets(input, secretFields);
+    const input = readFields({ formData, fields, arrayFields });
+    const values = echoedValues(input, echoFields);
 
     const parsed = schema.safeParse(input, { error: formErrorMap });
     if (!parsed.success) {
@@ -40,8 +45,9 @@ export function formAction<TSchema extends z.ZodObject>(
       };
     }
 
+    let data: TData;
     try {
-      await handler(parsed.data);
+      data = await handler(parsed.data);
     } catch (error) {
       if (error instanceof ApiError) {
         return apiErrorState({ error, values, fields, messages });
@@ -49,17 +55,43 @@ export function formAction<TSchema extends z.ZodObject>(
       throw error;
     }
 
-    return { status: 'success', values: {}, fieldErrors: {} };
+    return { status: 'success', values: {}, fieldErrors: {}, data };
   };
 }
 
-function readFields<TField extends string>(
-  formData: FormData,
-  fields: readonly TField[],
-): Partial<Record<TField, string>> {
-  const input: Partial<Record<TField, string>> = {};
+function isArraySchema(schema: unknown): boolean {
+  let current = schema;
+  while (
+    current instanceof z.ZodOptional ||
+    current instanceof z.ZodNullable ||
+    current instanceof z.ZodDefault
+  ) {
+    current = current.unwrap();
+  }
+  return current instanceof z.ZodArray;
+}
+
+function readFields<TField extends string>({
+  formData,
+  fields,
+  arrayFields,
+}: {
+  formData: FormData;
+  fields: readonly TField[];
+  arrayFields: ReadonlySet<TField>;
+}): FormValues<TField> {
+  const input: FormValues<TField> = {};
 
   for (const field of fields) {
+    if (arrayFields.has(field)) {
+      input[field] = formData
+        .getAll(field)
+        .filter(
+          (value): value is string => typeof value === 'string' && value !== '',
+        );
+      continue;
+    }
+
     const value = formData.get(field);
     if (typeof value === 'string' && value !== '') input[field] = value;
   }
@@ -67,12 +99,17 @@ function readFields<TField extends string>(
   return input;
 }
 
-function withoutSecrets<TField extends string>(
-  input: Partial<Record<TField, string>>,
-  secretFields: readonly TField[],
-): Partial<Record<TField, string>> {
-  const values = { ...input };
-  for (const field of secretFields) delete values[field];
+function echoedValues<TField extends string>(
+  input: FormValues<TField>,
+  echoFields: readonly TField[],
+): FormValues<TField> {
+  const values: FormValues<TField> = {};
+
+  for (const field of echoFields) {
+    const value = input[field];
+    if (value !== undefined) values[field] = value;
+  }
+
   return values;
 }
 
@@ -97,10 +134,10 @@ function apiErrorState<TField extends string>({
   messages,
 }: {
   error: ApiError;
-  values: Partial<Record<TField, string>>;
+  values: FormValues<TField>;
   fields: readonly TField[];
   messages: ErrorMessages;
-}): FormState<TField> {
+}): FormState<TField, never> {
   const fieldErrors: Partial<Record<TField, string>> = {};
 
   for (const issue of error.fieldErrors) {
