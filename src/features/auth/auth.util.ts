@@ -1,4 +1,4 @@
-import { REDIRECT_PARAM } from '@/features/auth/auth.constants';
+import { REDIRECT_PARAM } from '@/lib/constants/route.constants';
 
 type SearchParams = Record<string, string | string[] | undefined>;
 

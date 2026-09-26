@@ -2,6 +2,7 @@ import { cn } from 'cn';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { fontSans } from '@/app/fonts';
+import { QueryProvider } from '@/components/query-provider';
 import { THEME_SCRIPT } from '@/components/theme/theme.script';
 import { Toaster } from '@/components/ui/sonner';
 import { APP_LOCALE, APP_NAME } from '@/lib/constants/app.constants';
@@ -25,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>): ReactNode {
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
       <body>
-        {children}
+        <QueryProvider>{children}</QueryProvider>
         <Toaster />
       </body>
     </html>

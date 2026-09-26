@@ -1,4 +1,3 @@
-import 'server-only';
 import type * as api from '@/lib/api';
 import { zErrorResponse } from '@/lib/api/zod.gen';
 import { COMMON_ERROR } from '@/lib/constants/error.constants';

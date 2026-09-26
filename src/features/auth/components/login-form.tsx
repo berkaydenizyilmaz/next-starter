@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { loginAction } from '@/features/auth/auth.actions';
-import { REDIRECT_PARAM } from '@/features/auth/auth.constants';
+import { REDIRECT_PARAM } from '@/lib/constants/route.constants';
 import { idleFormState } from '@/lib/utils/form.util';
 
 export function LoginForm({ redirectTo }: { redirectTo?: string }): ReactNode {

@@ -10,6 +10,8 @@ import type { IncomingHeaders } from '@/server/request-context';
 
 export const SESSION_COOKIE_NAME = '__Host-session';
 
+const COOKIE_HEADER = 'cookie';
+
 const sessionSchema = z.object({
   accessToken: z.string().min(1),
   accessTokenExpiresAt: z.number().int(),
@@ -81,6 +83,20 @@ export async function sessionCookie(
 
 export function expiredSessionCookie(): SessionCookie {
   return { ...SESSION_COOKIE_OPTIONS, value: '', maxAge: 0 };
+}
+
+export function applySessionCookie(
+  headers: Headers,
+  cookie: SessionCookie,
+): void {
+  const pairs = (headers.get(COOKIE_HEADER) ?? '')
+    .split(';')
+    .map((pair) => pair.trim())
+    .filter((pair) => pair && !pair.startsWith(`${SESSION_COOKIE_NAME}=`));
+  if (cookie.value) pairs.push(`${SESSION_COOKIE_NAME}=${cookie.value}`);
+
+  if (pairs.length > 0) headers.set(COOKIE_HEADER, pairs.join('; '));
+  else headers.delete(COOKIE_HEADER);
 }
 
 export async function readSession(): Promise<Session | null> {

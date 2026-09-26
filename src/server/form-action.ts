@@ -1,7 +1,9 @@
 import 'server-only';
 import { z } from 'zod';
+import { ApiError } from '@/lib/api.error';
 import type { FormState, FormValue } from '@/lib/form.types';
 import {
+  apiErrorMessage,
   type ErrorMessages,
   errorMessage,
 } from '@/lib/messages/error.messages';
@@ -9,7 +11,6 @@ import {
   formErrorMap,
   ISSUE_CODE_MESSAGES,
 } from '@/lib/messages/form.messages';
-import { ApiError } from '@/server/api/api.error';
 
 type FieldName<TSchema extends z.ZodObject> = Extract<
   keyof z.input<TSchema>,
@@ -162,14 +163,6 @@ function apiErrorState<TField extends string>({
     status: 'error',
     values,
     fieldErrors,
-    formError: hasFieldErrors
-      ? undefined
-      : withRetryHint(errorMessage(error.code, messages), error),
+    formError: hasFieldErrors ? undefined : apiErrorMessage(error, messages),
   };
-}
-
-function withRetryHint(message: string, error: ApiError): string {
-  return error.retryAfterSeconds
-    ? `${message} ${error.retryAfterSeconds} saniye sonra tekrar deneyebilirsin.`
-    : message;
 }

@@ -1,7 +1,5 @@
 import { MS_PER_MINUTE } from '@/lib/constants/time.constants';
 
-export const REDIRECT_PARAM = 'next';
-
 export const ACCESS_TOKEN_REFRESH_MARGIN_MS = MS_PER_MINUTE;
 
 export const AUTH_ERROR = {

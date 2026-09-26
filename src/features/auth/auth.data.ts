@@ -6,11 +6,11 @@ import {
   saveSession,
 } from '@/features/auth/session.cookie';
 import * as api from '@/lib/api';
+import { ApiError, isTransportError } from '@/lib/api.error';
 import type { Client } from '@/lib/api/client';
 import { HTTP_STATUS } from '@/lib/constants/http.constants';
 import { ROUTE } from '@/lib/constants/route.constants';
 import { apiClient } from '@/server/api/api.client';
-import { ApiError, isTransportError } from '@/server/api/api.error';
 import { requestLogger } from '@/server/logger';
 
 export interface CurrentUser {
@@ -88,6 +88,11 @@ export async function getCurrentUser(): Promise<CurrentUser> {
   if (!user) redirect(ROUTE.LOGIN);
 
   return user;
+}
+
+export async function getAccessTokenOrNull(): Promise<string | null> {
+  const session = await readSession();
+  return session?.accessToken ?? null;
 }
 
 export async function sessionClient(): Promise<Client> {

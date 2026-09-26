@@ -1,3 +1,4 @@
+import type { ApiError } from '@/lib/api.error';
 import { COMMON_ERROR } from '@/lib/constants/error.constants';
 
 export type ErrorMessages = Readonly<Partial<Record<string, string>>>;
@@ -26,4 +27,15 @@ export function errorMessage(
   messages: ErrorMessages = {},
 ): string {
   return messages[code] ?? COMMON_ERROR_MESSAGES[code] ?? FALLBACK_MESSAGE;
+}
+
+export function apiErrorMessage(
+  error: ApiError,
+  messages: ErrorMessages = {},
+): string {
+  const message = errorMessage(error.code, messages);
+
+  return error.retryAfterSeconds
+    ? `${message} ${error.retryAfterSeconds} saniye sonra tekrar deneyebilirsin.`
+    : message;
 }

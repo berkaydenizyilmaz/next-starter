@@ -1,10 +1,8 @@
 import 'server-only';
 import { type NextRequest, NextResponse } from 'next/server';
+import { ACCESS_TOKEN_REFRESH_MARGIN_MS } from '@/features/auth/auth.constants';
 import {
-  ACCESS_TOKEN_REFRESH_MARGIN_MS,
-  REDIRECT_PARAM,
-} from '@/features/auth/auth.constants';
-import {
+  applySessionCookie,
   expiredSessionCookie,
   type Session,
   SESSION_COOKIE_NAME,
@@ -13,10 +11,11 @@ import {
   sessionFromCookie,
 } from '@/features/auth/session.cookie';
 import * as api from '@/lib/api';
+import { ApiError, isTransportError } from '@/lib/api.error';
 import { HTTP_STATUS } from '@/lib/constants/http.constants';
-import { PUBLIC_ROUTES, ROUTE } from '@/lib/constants/route.constants';
+import { PUBLIC_ROUTES } from '@/lib/constants/route.constants';
+import { signInPath } from '@/lib/utils/url.util';
 import { createApiClient } from '@/server/api/api.client';
-import { ApiError, isTransportError } from '@/server/api/api.error';
 import { requestLogger } from '@/server/logger';
 
 type RefreshOutcome =
@@ -45,6 +44,8 @@ export async function authenticate({
     value: request.cookies.get(SESSION_COOKIE_NAME)?.value,
     headers,
   });
+
+  if (cookie) applySessionCookie(headers, cookie);
 
   const response =
     !signedIn && requiresSignIn(request)
@@ -151,12 +152,6 @@ function requiresSignIn(request: NextRequest): boolean {
 }
 
 function signInUrl(request: NextRequest): URL {
-  const url = new URL(ROUTE.LOGIN, request.url);
   const { pathname, search } = request.nextUrl;
-
-  if (pathname !== ROUTE.HOME) {
-    url.searchParams.set(REDIRECT_PARAM, `${pathname}${search}`);
-  }
-
-  return url;
+  return new URL(signInPath(`${pathname}${search}`), request.url);
 }
