@@ -3,6 +3,7 @@ export const ROUTE = {
   LOGIN: '/login',
   REGISTER: '/register',
   SECURITY_LOG: '/account/security-log',
+  SESSIONS: '/account/sessions',
 } as const;
 
 export const REDIRECT_PARAM = 'next';

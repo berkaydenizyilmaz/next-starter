@@ -15,10 +15,10 @@ export default function AppLayout({ children }: LayoutProps<'/'>): ReactNode {
             {APP_NAME}
           </Link>
           <Link
-            href={ROUTE.SECURITY_LOG}
+            href={ROUTE.SESSIONS}
             className="text-sm text-muted-foreground hover:text-foreground"
           >
-            Güvenlik günlüğü
+            Hesap
           </Link>
         </nav>
         <div className="flex items-center gap-2">

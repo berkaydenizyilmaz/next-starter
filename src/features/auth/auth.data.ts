@@ -64,6 +64,20 @@ export async function logout(): Promise<void> {
   await clearSession();
 }
 
+export async function listSessions(): Promise<api.Session[]> {
+  const { data } = await api.listSessions({ client: await sessionClient() });
+  return data;
+}
+
+export async function revokeSession(id: string): Promise<void> {
+  await api.revokeSession({ client: await sessionClient(), path: { id } });
+}
+
+export async function revokeAllSessions(): Promise<void> {
+  await api.revokeAllSessions({ client: await sessionClient() });
+  await clearSession();
+}
+
 export async function getCurrentUserOrNull(): Promise<CurrentUser | null> {
   'use cache: private';
 
