@@ -8,6 +8,8 @@ import {
   login,
   logout,
   register,
+  requestPasswordReset,
+  resetPassword,
   revokeAllSessions,
   revokeSession,
 } from '@/features/auth/auth.data';
@@ -15,7 +17,9 @@ import { AUTH_ERROR_MESSAGES } from '@/features/auth/auth.messages';
 import {
   zChangePasswordRequest,
   zLoginRequest,
+  zForgotPasswordRequest,
   zRegisterRequest,
+  zResetPasswordRequest,
   zRevokeSessionPath,
 } from '@/lib/api/zod.gen';
 import { REDIRECT_PARAM, ROUTE } from '@/lib/constants/route.constants';
@@ -52,6 +56,20 @@ export async function logoutAction(): Promise<void> {
   await logout();
   redirect(ROUTE.LOGIN);
 }
+
+export const requestPasswordResetAction = formAction(
+  {
+    schema: zForgotPasswordRequest,
+    echoFields: ['email'],
+    messages: AUTH_ERROR_MESSAGES,
+  },
+  requestPasswordReset,
+);
+
+export const resetPasswordAction = formAction(
+  { schema: zResetPasswordRequest, messages: AUTH_ERROR_MESSAGES },
+  resetPassword,
+);
 
 export const changePasswordAction = formAction(
   { schema: zChangePasswordRequest, messages: AUTH_ERROR_MESSAGES },

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { type ReactNode, Suspense } from 'react';
 import { redirectQuery, redirectTarget } from '@/features/auth/auth.util';
+import { SignedInRedirect } from '@/features/auth/components/signed-in-redirect';
 import { LoginForm } from '@/features/auth/components/login-form';
 import { ROUTE } from '@/lib/constants/route.constants';
 
@@ -29,7 +30,14 @@ async function LoginSection({
 
   return (
     <>
+      <SignedInRedirect />
       <LoginForm redirectTo={target} />
+      <Link
+        href={ROUTE.FORGOT_PASSWORD}
+        className="text-sm text-foreground underline underline-offset-4"
+      >
+        Şifreni mi unuttun?
+      </Link>
       <p className="text-sm text-muted-foreground">
         Hesabın yok mu?{' '}
         <Link

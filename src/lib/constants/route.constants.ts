@@ -2,6 +2,8 @@ export const ROUTE = {
   HOME: '/',
   LOGIN: '/login',
   REGISTER: '/register',
+  FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password',
   SECURITY_LOG: '/account/security-log',
   SESSIONS: '/account/sessions',
   CHANGE_PASSWORD: '/account/password',
@@ -12,4 +14,6 @@ export const REDIRECT_PARAM = 'next';
 export const PUBLIC_ROUTES: ReadonlySet<string> = new Set([
   ROUTE.LOGIN,
   ROUTE.REGISTER,
+  ROUTE.FORGOT_PASSWORD,
+  ROUTE.RESET_PASSWORD,
 ]);

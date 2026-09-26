@@ -64,6 +64,19 @@ export async function logout(): Promise<void> {
   await clearSession();
 }
 
+export async function requestPasswordReset(
+  input: api.ForgotPasswordRequest,
+): Promise<void> {
+  await api.requestPasswordReset({ client: await apiClient(), body: input });
+}
+
+export async function resetPassword(
+  input: api.ResetPasswordRequest,
+): Promise<void> {
+  await api.resetPassword({ client: await apiClient(), body: input });
+  await clearSession();
+}
+
 export async function changePassword(
   input: api.ChangePasswordRequest,
 ): Promise<void> {

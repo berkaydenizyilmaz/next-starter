@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { type ReactNode, Suspense } from 'react';
 import { redirectQuery, redirectTarget } from '@/features/auth/auth.util';
+import { SignedInRedirect } from '@/features/auth/components/signed-in-redirect';
 import { RegisterForm } from '@/features/auth/components/register-form';
 import { ROUTE } from '@/lib/constants/route.constants';
 
@@ -29,6 +30,7 @@ async function RegisterSection({
 
   return (
     <>
+      <SignedInRedirect />
       <RegisterForm redirectTo={target} />
       <p className="text-sm text-muted-foreground">
         Zaten hesabın var mı?{' '}
