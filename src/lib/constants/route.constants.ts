@@ -4,6 +4,7 @@ export const ROUTE = {
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
+  ACCOUNT: '/account',
   SECURITY_LOG: '/account/security-log',
   SESSIONS: '/account/sessions',
   CHANGE_PASSWORD: '/account/password',

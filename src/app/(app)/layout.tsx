@@ -15,7 +15,7 @@ export default function AppLayout({ children }: LayoutProps<'/'>): ReactNode {
             {APP_NAME}
           </Link>
           <Link
-            href={ROUTE.SESSIONS}
+            href={ROUTE.ACCOUNT}
             className="text-sm text-muted-foreground hover:text-foreground"
           >
             Hesap
