@@ -1,10 +1,9 @@
 import 'server-only';
 import type { ValidationIssue } from '@/lib/api';
 import { zErrorResponse } from '@/lib/api/zod.gen';
+import { HTTP_STATUS } from '@/lib/constants/http.constants';
 import { COMMON_ERROR } from '@/lib/errors/error.constants';
 
-const HTTP_BAD_GATEWAY = 502;
-const HTTP_GATEWAY_TIMEOUT = 504;
 const TIMEOUT_ERROR_NAME = 'TimeoutError';
 
 const TRANSPORT_ERROR_CODES: ReadonlySet<string> = new Set([
@@ -54,13 +53,13 @@ export function toApiError({
     return error instanceof Error && error.name === TIMEOUT_ERROR_NAME
       ? new ApiError({
           code: COMMON_ERROR.API_TIMEOUT,
-          status: HTTP_GATEWAY_TIMEOUT,
+          status: HTTP_STATUS.GATEWAY_TIMEOUT,
           message: 'API request timed out',
           cause: error,
         })
       : new ApiError({
           code: COMMON_ERROR.API_UNREACHABLE,
-          status: HTTP_BAD_GATEWAY,
+          status: HTTP_STATUS.BAD_GATEWAY,
           message: 'API is unreachable',
           cause: error,
         });
@@ -70,7 +69,7 @@ export function toApiError({
   if (!body.success) {
     return new ApiError({
       code: COMMON_ERROR.API_INVALID_RESPONSE,
-      status: HTTP_BAD_GATEWAY,
+      status: HTTP_STATUS.BAD_GATEWAY,
       message: `API answered ${response.status} with an unexpected body`,
       cause: error instanceof Error ? error : undefined,
     });

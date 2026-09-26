@@ -1,13 +1,14 @@
 import 'server-only';
 import { headers } from 'next/headers';
 import { type Client, createClient, createConfig } from '@/lib/api/client';
+import { MS_PER_SECOND } from '@/lib/constants/time.constants';
 import { isTransportError, toApiError } from '@/server/api/api.error';
 import { resolveClientIp } from '@/server/client-ip';
 import { env } from '@/server/env';
-import { logger } from '@/server/logger';
-import { REQUEST_ID_HEADER } from '@/server/request-id';
+import { requestLogger } from '@/server/logger';
+import { type IncomingHeaders, REQUEST_ID_HEADER } from '@/server/request-id';
 
-const API_TIMEOUT_MS = 10_000;
+const API_TIMEOUT_MS = 10 * MS_PER_SECOND;
 const PASSED_THROUGH_HEADERS = [
   REQUEST_ID_HEADER,
   'user-agent',
@@ -15,29 +16,39 @@ const PASSED_THROUGH_HEADERS = [
 ] as const;
 const FORWARDED_FOR_HEADER = 'x-forwarded-for';
 
-export async function apiClient(): Promise<Client> {
-  const outgoing = await forwardedHeaders();
-  const requestId = outgoing.get(REQUEST_ID_HEADER) ?? undefined;
+export async function apiClient({
+  accessToken,
+}: { accessToken?: string } = {}): Promise<Client> {
+  return createApiClient({ incoming: await headers(), accessToken });
+}
 
+export function createApiClient({
+  incoming,
+  accessToken,
+}: {
+  incoming: IncomingHeaders;
+  accessToken?: string;
+}): Client {
   const client = createClient(
     createConfig({
       baseUrl: env.API_URL,
-      headers: outgoing,
+      headers: forwardedHeaders(incoming),
+      auth: accessToken,
       fetch: fetchWithTimeout,
       throwOnError: true,
     }),
   );
 
-  client.interceptors.error.use((error, response, options) => {
+  client.interceptors.error.use(async (error, response, options) => {
     const apiError = toApiError({ error, response });
 
     if (isTransportError(apiError)) {
-      logger.error(
+      const log = await requestLogger(incoming);
+      log.error(
         {
           err: apiError.cause,
           code: apiError.code,
           status: response?.status,
-          requestId,
           method: options.method,
           path: options.url,
         },
@@ -51,8 +62,7 @@ export async function apiClient(): Promise<Client> {
   return client;
 }
 
-async function forwardedHeaders(): Promise<Headers> {
-  const incoming = await headers();
+function forwardedHeaders(incoming: IncomingHeaders): Headers {
   const outgoing = new Headers();
 
   for (const name of PASSED_THROUGH_HEADERS) {

@@ -50,7 +50,9 @@ export const zRegisterRequest = z.object({
 
 export const zTokenPair = z.object({
     accessToken: z.string(),
-    refreshToken: z.string()
+    accessTokenExpiresIn: z.int().gte(-9007199254740991).lte(9007199254740991),
+    refreshToken: z.string(),
+    refreshTokenExpiresIn: z.int().gte(-9007199254740991).lte(9007199254740991)
 });
 
 export const zLoginRequest = z.object({
@@ -60,7 +62,9 @@ export const zLoginRequest = z.object({
 
 export const zLoginResponse = z.object({
     accessToken: z.string(),
+    accessTokenExpiresIn: z.int().gte(-9007199254740991).lte(9007199254740991),
     refreshToken: z.string(),
+    refreshTokenExpiresIn: z.int().gte(-9007199254740991).lte(9007199254740991),
     reactivated: z.boolean()
 });
 

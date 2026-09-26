@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { APP_NAME } from '@/lib/app.constants';
+import { APP_NAME } from '@/lib/constants/app.constants';
 
 export default function GlobalError({
   retry,

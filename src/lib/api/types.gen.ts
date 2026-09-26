@@ -52,7 +52,9 @@ export type RegisterRequest = {
 
 export type TokenPair = {
     accessToken: string;
+    accessTokenExpiresIn: number;
     refreshToken: string;
+    refreshTokenExpiresIn: number;
 };
 
 export type LoginRequest = {
@@ -62,7 +64,9 @@ export type LoginRequest = {
 
 export type LoginResponse = {
     accessToken: string;
+    accessTokenExpiresIn: number;
     refreshToken: string;
+    refreshTokenExpiresIn: number;
     reactivated: boolean;
 };
 

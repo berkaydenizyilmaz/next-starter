@@ -1,0 +1,11 @@
+import { MS_PER_MINUTE } from '@/lib/constants/time.constants';
+
+export const REDIRECT_PARAM = 'next';
+
+export const ACCESS_TOKEN_REFRESH_MARGIN_MS = MS_PER_MINUTE;
+
+export const AUTH_ERROR = {
+  INVALID_CREDENTIALS: 'INVALID_CREDENTIALS',
+  ACCOUNT_TEMPORARILY_LOCKED: 'ACCOUNT_TEMPORARILY_LOCKED',
+  EMAIL_TAKEN: 'EMAIL_TAKEN',
+} as const;

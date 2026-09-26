@@ -8,6 +8,7 @@ export const env = createEnv({
     API_URL: z.url(),
     TRUST_PROXY_HOPS: z.coerce.number().int().min(1).default(1),
     LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
+    SESSION_SECRET: z.string().min(32),
   },
   experimental__runtimeEnv: process.env,
   emptyStringAsUndefined: true,
