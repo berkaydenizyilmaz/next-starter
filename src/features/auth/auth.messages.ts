@@ -12,3 +12,7 @@ export const AUTH_ERROR_MESSAGES: ErrorMessages = {
   [AUTH_ERROR.RESET_TOKEN_EXPIRED]: 'Bağlantının süresi dolmuş.',
   [AUTH_ERROR.SESSION_NOT_FOUND]: 'Bu oturum zaten kapatılmış.',
 };
+
+export const AUTH_FLASH_MESSAGES = {
+  REACTIVATED: 'Hesabın yeniden açıldı; silme işlemi iptal edildi.',
+} as const;

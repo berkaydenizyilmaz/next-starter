@@ -13,7 +13,10 @@ import {
   revokeAllSessions,
   revokeSession,
 } from '@/features/auth/auth.data';
-import { AUTH_ERROR_MESSAGES } from '@/features/auth/auth.messages';
+import {
+  AUTH_ERROR_MESSAGES,
+  AUTH_FLASH_MESSAGES,
+} from '@/features/auth/auth.messages';
 import {
   zChangePasswordRequest,
   zLoginRequest,
@@ -24,6 +27,7 @@ import {
 } from '@/lib/api/zod.gen';
 import { REDIRECT_PARAM, ROUTE } from '@/lib/constants/route.constants';
 import { internalPath } from '@/lib/utils/url.util';
+import { setFlash } from '@/server/flash';
 import { formAction } from '@/server/form-action';
 
 const redirectField = { [REDIRECT_PARAM]: z.string().optional() };
@@ -35,7 +39,13 @@ export const loginAction = formAction(
     messages: AUTH_ERROR_MESSAGES,
   },
   async ({ [REDIRECT_PARAM]: redirectTo, ...credentials }) => {
-    await login(credentials);
+    const { reactivated } = await login(credentials);
+    if (reactivated) {
+      await setFlash({
+        kind: 'success',
+        message: AUTH_FLASH_MESSAGES.REACTIVATED,
+      });
+    }
     redirect(internalPath(redirectTo));
   },
 );

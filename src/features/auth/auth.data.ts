@@ -24,12 +24,16 @@ const SIGNED_OUT_STATUSES: ReadonlySet<number> = new Set([
   HTTP_STATUS.NOT_FOUND,
 ]);
 
-export async function login(credentials: api.LoginRequest): Promise<void> {
+export async function login(
+  credentials: api.LoginRequest,
+): Promise<{ reactivated: boolean }> {
   const { data } = await api.login({
     client: await apiClient(),
     body: credentials,
   });
   await saveSession(data);
+
+  return { reactivated: data.reactivated };
 }
 
 export async function register(account: api.RegisterRequest): Promise<void> {
