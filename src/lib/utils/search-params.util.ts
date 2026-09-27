@@ -39,6 +39,14 @@ export function parseSearchParams<TShape extends z.ZodRawShape>(
   };
 }
 
+export function singleSearchParam(
+  searchParams: SearchParams,
+  name: string,
+): string | undefined {
+  const value = searchParams[name];
+  return typeof value === 'string' && value !== '' ? value : undefined;
+}
+
 export function toSearchQuery(
   values: Readonly<Record<string, SearchValue>>,
 ): Record<string, string> {
