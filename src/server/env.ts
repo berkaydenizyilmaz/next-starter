@@ -9,6 +9,8 @@ export const env = createEnv({
     TRUST_PROXY_HOPS: z.coerce.number().int().min(1).default(1),
     LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
     SESSION_SECRET: z.string().min(32),
+    STORAGE_PUBLIC_ORIGIN: z.url().transform((value) => new URL(value).origin),
+    STORAGE_UPLOAD_ORIGIN: z.url().transform((value) => new URL(value).origin),
   },
   experimental__runtimeEnv: process.env,
   emptyStringAsUndefined: true,
