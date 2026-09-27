@@ -1,6 +1,7 @@
 import type { NextRequest, NextResponse } from 'next/server';
 import { authenticate } from '@/features/auth/auth.proxy';
 import { REQUEST_ID_HEADER, resolveRequestId } from '@/server/request-context';
+import { applySecurityHeaders } from '@/server/security-headers';
 
 export async function proxy(request: NextRequest): Promise<NextResponse> {
   const requestId = resolveRequestId(request.headers);
@@ -10,6 +11,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 
   const response = await authenticate({ request, headers });
   response.headers.set(REQUEST_ID_HEADER, requestId);
+  applySecurityHeaders(response.headers);
   return response;
 }
 
