@@ -23,12 +23,5 @@ export default function AuditLogsPage({
 async function AuditLogPage({
   searchParams,
 }: Pick<PageProps<'/admin/audit-logs'>, 'searchParams'>): Promise<ReactNode> {
-  const { page } = await searchParams;
-  const parsed = Number(page);
-
-  return (
-    <AuditLogSection
-      page={Number.isInteger(parsed) && parsed > 0 ? parsed : 1}
-    />
-  );
+  return <AuditLogSection searchParams={await searchParams} />;
 }

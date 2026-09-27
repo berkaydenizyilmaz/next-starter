@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 import {
   Table,
@@ -9,6 +10,7 @@ import {
 } from '@/components/ui/table';
 import type * as api from '@/lib/api';
 import { AUDIT_OUTCOME } from '@/lib/constants/audit.constants';
+import { ROUTE } from '@/lib/constants/route.constants';
 import {
   auditEventLabel,
   auditOutcomeLabel,
@@ -57,10 +59,10 @@ export function AuditLogTable({
               {auditOutcomeLabel(entry.outcome)}
             </TableCell>
             <TableCell>
-              <IdText id={entry.actorId} />
+              <IdLink field="actorId" id={entry.actorId} />
             </TableCell>
             <TableCell>
-              <IdText id={entry.subjectId} />
+              <IdLink field="subjectId" id={entry.subjectId} />
             </TableCell>
             <TableCell>
               {entry.targetType
@@ -93,12 +95,22 @@ export function AuditLogTable({
   );
 }
 
-function IdText({ id }: { id: string | null }): ReactNode {
+function IdLink({
+  field,
+  id,
+}: {
+  field: 'actorId' | 'subjectId';
+  id: string | null;
+}): ReactNode {
   if (!id) return '—';
 
   return (
-    <span className="font-mono text-xs" title={id}>
+    <Link
+      href={{ pathname: ROUTE.ADMIN_AUDIT_LOGS, query: { [field]: id } }}
+      className="font-mono text-xs underline-offset-4 hover:underline"
+      title={id}
+    >
       {id.slice(0, 8)}
-    </span>
+    </Link>
   );
 }
