@@ -4,6 +4,7 @@ import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { getCurrentUser } from '@/features/auth/auth.data';
 import { SignOutButton } from '@/features/auth/components/sign-out-button';
 import { APP_NAME } from '@/lib/constants/app.constants';
+import { ROLE } from '@/lib/constants/role.constants';
 import { ROUTE } from '@/lib/constants/route.constants';
 
 export default function AppLayout({ children }: LayoutProps<'/'>): ReactNode {
@@ -38,6 +39,14 @@ async function AccountMenu(): Promise<ReactNode> {
 
   return (
     <div className="flex items-center gap-2">
+      {user.role === ROLE.ADMIN && (
+        <Link
+          href={ROUTE.ADMIN_AUDIT_LOGS}
+          className="text-sm text-muted-foreground hover:text-foreground"
+        >
+          Yönetim
+        </Link>
+      )}
       <span className="text-sm text-muted-foreground">{user.email}</span>
       <SignOutButton />
     </div>

@@ -1,5 +1,5 @@
 import 'server-only';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import {
   clearSession,
   readSession,
@@ -125,6 +125,15 @@ export async function getCurrentUserOrNull(): Promise<CurrentUser | null> {
 export async function getCurrentUser(): Promise<CurrentUser> {
   const user = await getCurrentUserOrNull();
   if (!user) redirect(ROUTE.LOGIN);
+
+  return user;
+}
+
+export async function requireRole(
+  ...roles: CurrentUser['role'][]
+): Promise<CurrentUser> {
+  const user = await getCurrentUser();
+  if (!roles.includes(user.role)) notFound();
 
   return user;
 }
