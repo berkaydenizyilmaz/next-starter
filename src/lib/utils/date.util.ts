@@ -1,7 +1,8 @@
 import { APP_LOCALE, APP_TIMEZONE } from '@/lib/constants/app.constants';
-import { MS_PER_MINUTE } from '@/lib/constants/time.constants';
-
-const MINUTES_PER_HOUR = 60;
+import {
+  MINUTES_PER_HOUR,
+  MS_PER_MINUTE,
+} from '@/lib/constants/time.constants';
 
 const dateTimeFormat = new Intl.DateTimeFormat(APP_LOCALE, {
   dateStyle: 'medium',

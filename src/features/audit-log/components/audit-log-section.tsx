@@ -2,10 +2,8 @@ import type { ReactNode } from 'react';
 import { PaginationNav } from '@/components/pagination-nav';
 import { AUDIT_LOG_ROLES } from '@/features/audit-log/audit-log.constants';
 import { listAuditLogs } from '@/features/audit-log/audit-log.data';
-import {
-  auditLogSearchSchema,
-  toListAuditLogsQuery,
-} from '@/features/audit-log/audit-log.util';
+import { auditLogSearchSchema } from '@/features/audit-log/audit-log.schemas';
+import { toListAuditLogsQuery } from '@/features/audit-log/audit-log.util';
 import { AuditLogFilters } from '@/features/audit-log/components/audit-log-filters';
 import { AuditLogTable } from '@/features/audit-log/components/audit-log-table';
 import { requireRole } from '@/features/auth/auth.data';

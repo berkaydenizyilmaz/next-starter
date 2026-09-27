@@ -8,7 +8,7 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from '@/components/ui/native-select';
-import type { AuditLogSearch } from '@/features/audit-log/audit-log.util';
+import type { AuditLogSearch } from '@/features/audit-log/audit-log.schemas';
 import { AUDIT_EVENT, AUDIT_OUTCOME } from '@/lib/constants/audit.constants';
 import { ROUTE } from '@/lib/constants/route.constants';
 import {
