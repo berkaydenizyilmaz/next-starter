@@ -7,16 +7,22 @@ import {
   REQUEST_ID_HEADER,
 } from '@/server/request-context';
 
-export const logger: Logger = pino({
-  level: env.LOG_LEVEL,
-  ...(process.env.NODE_ENV === 'development' && {
-    transport: { target: 'pino-pretty', options: { singleLine: true } },
-  }),
-});
+let rootLogger: Logger | undefined;
+
+export function getLogger(): Logger {
+  rootLogger ??= pino({
+    level: env.LOG_LEVEL,
+    ...(process.env.NODE_ENV === 'development' && {
+      transport: { target: 'pino-pretty', options: { singleLine: true } },
+    }),
+  });
+  return rootLogger;
+}
 
 export async function requestLogger(
   incoming?: IncomingHeaders,
 ): Promise<Logger> {
   const requestId = (incoming ?? (await headers())).get(REQUEST_ID_HEADER);
-  return requestId ? logger.child({ requestId }) : logger;
+  const log = getLogger();
+  return requestId ? log.child({ requestId }) : log;
 }

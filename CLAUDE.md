@@ -84,9 +84,10 @@ app`; `.oxlintrc.json` zorlar.
 - Tarayıcı Nest'e doğrudan gitmez ve token görmez. Vekil yalnızca `GET`
   iletir, cookie iletmez, `private, no-store` döner.
 - Cookie, `headers()` ya da env okuyan her şey `<Suspense>` içindedir. Env
-  yalnızca istek sırasında okunur, prerender'da ya da `'use cache'` içinde
-  okunmaz. Kullanıcıya özgü veri yalnızca `'use cache: private'` ile önbelleğe
-  girer.
+  yalnızca istek sırasında okunur; modül yüklenirken, prerender'da ya da
+  `'use cache'` içinde okunmaz, env'e bağlı nesne ilk kullanımda kurulur. Build
+  env olmadan da geçmelidir. Kullanıcıya özgü veri yalnızca
+  `'use cache: private'` ile önbelleğe girer.
 - Cursor sayfalama "daha fazla yükle", offset sayfalama sayfa linkleridir.
   Filtre ve sayfa URL'de durur; `next/form` GET gönderir, `parseSearchParams`
   alanları ayrı doğrular ve geçersiz alanı sorguya koymaz.

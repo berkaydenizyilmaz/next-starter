@@ -341,20 +341,21 @@ değer varsa süreç durur. Geliştirmede değerler `.env.local`'da tutulur.
 | `STORAGE_UPLOAD_ORIGIN` | zorunlu    | Nest'in döndürdüğü `uploadUrl`'in kökeni; R2'de `https://<private-bucket>.<account_id>.r2.cloudflarestorage.com`. CSP `connect-src` |
 | `TRUST_PROXY_HOPS`      | `1`        | Next'in önünde `X-Forwarded-For`'a ekleme yapan proxy sayısı                                                                        |
 | `LOG_LEVEL`             | `info`     | `error` · `warn` · `info` · `debug`                                                                                                 |
+| `PORT`                  | `3000`     | `pnpm start`'ın portu; yerelde `3001` (Nest `3000`'de). Yayında platform verir                                                      |
 
 Uygulama adı, dili ve saat dilimi `lib/constants/app.constants.ts`'te sabittir
 (`APP_NAME`, `APP_LOCALE = 'tr'`, `APP_TIMEZONE = 'Europe/Istanbul'`).
 
 ## Komutlar
 
-| Komut               | Ne yapar                                        |
-| ------------------- | ----------------------------------------------- |
-| `pnpm dev`          | Geliştirme sunucusu (`:3001`)                   |
-| `pnpm build`        | Production build (`.next/standalone`)           |
-| `pnpm start`        | Build'i çalıştırır                              |
-| `pnpm lint`         | oxlint (type-aware), katman kuralları dahil     |
-| `pnpm format`       | Prettier                                        |
-| `pnpm api:generate` | Nest spec'inden `src/lib/api`'yi yeniden üretir |
+| Komut               | Ne yapar                                                       |
+| ------------------- | -------------------------------------------------------------- |
+| `pnpm dev`          | Geliştirme sunucusu (`:3001`)                                  |
+| `pnpm build`        | Production build; statik dosyaları standalone çıktıya kopyalar |
+| `pnpm start`        | Standalone sunucuyu çalıştırır; yerelde `.env.local`'ı okur    |
+| `pnpm lint`         | oxlint (type-aware), katman kuralları dahil                    |
+| `pnpm format`       | Prettier                                                       |
+| `pnpm api:generate` | Nest spec'inden `src/lib/api`'yi yeniden üretir                |
 
 ## Kapsam dışı
 
@@ -368,12 +369,14 @@ Bunlar bilerek eklenmedi; ihtiyaç duyan proje kendisi ekler:
 
 ## Bilinen tuzaklar
 
-- **Standalone çıktı statik dosyaları içermez.** `.next/standalone/server.js`
-  ile çalıştırırken `.next/static`'i `.next/standalone/.next/static`'e (ve varsa
-  `public/`'i `.next/standalone/public`'e) kopyala; yoksa sayfa JavaScript'siz
-  ve stilsiz açılır.
-- **Env yalnızca istek sırasında okunur.** Prerender'da ya da `'use cache'`
-  içinde env okuma; build sırasında doğrulama atlanır.
+- **Standalone çıktı statik dosyaları ve env dosyalarını içermez.** `pnpm build`
+  `.next/static`'i (ve varsa `public/`'i) standalone klasörüne kopyalar;
+  `next build`'i doğrudan çalıştırırsan sayfa JavaScript'siz ve stilsiz açılır.
+  Env çıktıya kopyalanmaz: yerelde `pnpm start` `.env.local`'ı okur, yayında
+  env'i platform verir. `next start` standalone ile çalışmaz.
+- **Env yalnızca istek sırasında okunur.** Modül yüklenirken, prerender'da ya
+  da `'use cache'` içinde env okuma. Build sırasında doğrulama atlanır ve değer
+  `undefined` gelir; build env olmadan da geçmelidir.
 - **Cookie okuyan her şey `<Suspense>` içinde olmalı.** Cache Components
   bölümün dışında bu tür okumalara izin vermez.
 - **Rol kapısı 404 durum kodu döndürmez.** PPR statik kabuğu önce gönderdiği

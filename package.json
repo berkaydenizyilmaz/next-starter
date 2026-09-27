@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && node -e \"const fs=require('node:fs');fs.cpSync('.next/static','.next/standalone/.next/static',{recursive:true});if(fs.existsSync('public'))fs.cpSync('public','.next/standalone/public',{recursive:true})\"",
+    "start": "node --env-file-if-exists=.env.local .next/standalone/server.js",
     "lint": "oxlint --type-aware src/",
     "format": "prettier --write .",
     "api:generate": "openapi-ts"

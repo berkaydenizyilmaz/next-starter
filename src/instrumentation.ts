@@ -17,11 +17,11 @@ export const onRequestError: Instrumentation.onRequestError = async (
   context,
 ) => {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
-    const { logger } = await import('@/server/logger');
+    const { getLogger } = await import('@/server/logger');
     const { REQUEST_ID_HEADER } = await import('@/server/request-context');
     const requestId = request.headers[REQUEST_ID_HEADER];
 
-    logger.error(
+    getLogger().error(
       {
         err: error,
         digest: digestOf(error),
