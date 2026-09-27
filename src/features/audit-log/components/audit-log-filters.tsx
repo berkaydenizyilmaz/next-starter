@@ -1,5 +1,3 @@
-'use client';
-
 import Form from 'next/form';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
@@ -10,6 +8,7 @@ import {
   NativeSelect,
   NativeSelectOption,
 } from '@/components/ui/native-select';
+import type { AuditLogSearch } from '@/features/audit-log/audit-log.util';
 import { AUDIT_EVENT, AUDIT_OUTCOME } from '@/lib/constants/audit.constants';
 import { ROUTE } from '@/lib/constants/route.constants';
 import {
@@ -17,27 +16,20 @@ import {
   auditOutcomeLabel,
 } from '@/lib/messages/audit.messages';
 
-type FilterField =
-  | 'event'
-  | 'outcome'
-  | 'actorId'
-  | 'subjectId'
-  | 'targetType'
-  | 'targetId'
-  | 'from'
-  | 'to';
+type FilterField = Exclude<keyof AuditLogSearch, 'page'>;
 
-const TEXT_FILTERS = [
+const INPUT_FILTERS: readonly {
+  name: FilterField;
+  label: string;
+  type?: 'date';
+}[] = [
   { name: 'actorId', label: 'Aktör id' },
   { name: 'subjectId', label: 'Konu id' },
   { name: 'targetType', label: 'Hedef türü' },
   { name: 'targetId', label: 'Hedef id' },
-] as const;
-
-const DATE_FILTERS = [
-  { name: 'from', label: 'Başlangıç' },
-  { name: 'to', label: 'Bitiş' },
-] as const;
+  { name: 'from', label: 'Başlangıç', type: 'date' },
+  { name: 'to', label: 'Bitiş', type: 'date' },
+];
 
 export function AuditLogFilters({
   input,
@@ -88,25 +80,13 @@ export function AuditLogFilters({
         </NativeSelect>
         <FieldError>{fieldErrors.outcome}</FieldError>
       </Field>
-      {TEXT_FILTERS.map(({ name, label }) => (
+      {INPUT_FILTERS.map(({ name, label, type }) => (
         <Field key={name} data-invalid={!!fieldErrors[name]}>
           <FieldLabel htmlFor={name}>{label}</FieldLabel>
           <Input
             id={name}
             name={name}
-            defaultValue={input[name]}
-            aria-invalid={!!fieldErrors[name]}
-          />
-          <FieldError>{fieldErrors[name]}</FieldError>
-        </Field>
-      ))}
-      {DATE_FILTERS.map(({ name, label }) => (
-        <Field key={name} data-invalid={!!fieldErrors[name]}>
-          <FieldLabel htmlFor={name}>{label}</FieldLabel>
-          <Input
-            id={name}
-            name={name}
-            type="date"
+            type={type}
             defaultValue={input[name]}
             aria-invalid={!!fieldErrors[name]}
           />

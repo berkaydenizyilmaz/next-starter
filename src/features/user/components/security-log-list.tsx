@@ -2,18 +2,16 @@
 
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { FormAlert } from '@/components/form/form-alert';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { securityLogQuery } from '@/features/user/user.queries';
-import { ApiError } from '@/lib/api.error';
 import { AUDIT_OUTCOME } from '@/lib/constants/audit.constants';
-import { COMMON_ERROR } from '@/lib/constants/error.constants';
 import {
   auditEventLabel,
   auditOutcomeLabel,
 } from '@/lib/messages/audit.messages';
-import { apiErrorMessage, errorMessage } from '@/lib/messages/error.messages';
+import { errorMessageOf } from '@/lib/messages/error.messages';
 import { formatDateTime } from '@/lib/utils/date.util';
 
 export function SecurityLogList(): ReactNode {
@@ -61,15 +59,7 @@ export function SecurityLogList(): ReactNode {
           </li>
         ))}
       </ul>
-      {error && (
-        <Alert variant="destructive">
-          <AlertDescription>
-            {error instanceof ApiError
-              ? apiErrorMessage(error)
-              : errorMessage(COMMON_ERROR.INTERNAL_ERROR)}
-          </AlertDescription>
-        </Alert>
-      )}
+      {error && <FormAlert message={errorMessageOf(error)} />}
       {hasNextPage && (
         <Button
           type="button"

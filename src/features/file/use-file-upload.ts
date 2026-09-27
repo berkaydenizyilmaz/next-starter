@@ -5,7 +5,6 @@ import {
   completeUploadAction,
   createUploadAction,
 } from '@/features/file/file.actions';
-import { FILE_NAME_MAX_LENGTH } from '@/features/file/file.constants';
 import { FILE_UPLOAD_MESSAGES } from '@/features/file/file.messages';
 import { putToStorage } from '@/features/file/file.upload';
 import type * as api from '@/lib/api';
@@ -64,10 +63,7 @@ export function useFileUpload({
         purpose,
         contentType: file.type,
         size: file.size,
-        fileName:
-          file.name && file.name.length <= FILE_NAME_MAX_LENGTH
-            ? file.name
-            : undefined,
+        fileName: file.name || undefined,
       });
       if (!ticket.ok) {
         settle(ticket.message, null);

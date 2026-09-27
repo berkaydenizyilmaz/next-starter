@@ -53,17 +53,13 @@ export function createApiClient({
     const apiError = toApiError({ error, response });
 
     if (isTransportError(apiError)) {
-      const log = await requestLogger(incoming);
-      log.error(
-        {
-          err: apiError.cause,
-          code: apiError.code,
-          status: response?.status,
-          method: options.method,
-          path: options.url,
-        },
-        apiError.message,
-      );
+      await logTransportError({
+        incoming,
+        error: apiError,
+        status: response?.status,
+        method: options.method,
+        path: options.url,
+      });
     }
 
     return apiError;
@@ -105,16 +101,12 @@ export async function forwardToApi({
     });
   } catch (error) {
     const apiError = toApiError({ error, response: undefined });
-    const log = await requestLogger(request.headers);
-    log.error(
-      {
-        err: apiError.cause,
-        code: apiError.code,
-        method: request.method,
-        path: target.pathname,
-      },
-      apiError.message,
-    );
+    await logTransportError({
+      incoming: request.headers,
+      error: apiError,
+      method: request.method,
+      path: target.pathname,
+    });
     return errorResponse({ error: apiError, request });
   }
 
@@ -122,6 +114,26 @@ export async function forwardToApi({
     status: upstream.status,
     headers: relayedHeaders(upstream.headers),
   });
+}
+
+async function logTransportError({
+  incoming,
+  error,
+  status,
+  method,
+  path,
+}: {
+  incoming: IncomingHeaders;
+  error: ApiError;
+  status?: number;
+  method: string | undefined;
+  path: string;
+}): Promise<void> {
+  const log = await requestLogger(incoming);
+  log.error(
+    { err: error.cause, code: error.code, status, method, path },
+    error.message,
+  );
 }
 
 function errorResponse({

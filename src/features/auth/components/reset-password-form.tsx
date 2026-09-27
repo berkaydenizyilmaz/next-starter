@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { resetPasswordAction } from '@/features/auth/auth.actions';
+import { ResetLinkAlert } from '@/features/auth/components/reset-link-alert';
 import { ROUTE } from '@/lib/constants/route.constants';
 import { idleFormState } from '@/lib/utils/form.util';
 
@@ -41,15 +42,7 @@ export function ResetPasswordForm({ token }: { token: string }): ReactNode {
       <FieldGroup>
         <FormAlert message={state.formError} />
         {state.fieldErrors.token && (
-          <div className="flex flex-col gap-2">
-            <FormAlert message={state.fieldErrors.token} />
-            <Link
-              href={ROUTE.FORGOT_PASSWORD}
-              className="text-sm text-foreground underline underline-offset-4"
-            >
-              Yeni bağlantı iste
-            </Link>
-          </div>
+          <ResetLinkAlert message={state.fieldErrors.token} />
         )}
         <input type="hidden" name="token" defaultValue={token} />
         <Field data-invalid={!!state.fieldErrors.newPassword}>

@@ -1,22 +1,21 @@
 import 'server-only';
 import { cookies } from 'next/headers';
 import { z } from 'zod';
+import { FLASH_KINDS } from '@/lib/constants/flash.constants';
 import { MS_PER_MINUTE, MS_PER_SECOND } from '@/lib/constants/time.constants';
 import type { Flash } from '@/lib/types/flash.types';
+import { HOST_COOKIE_OPTIONS } from '@/server/host-cookie';
 
 const FLASH_COOKIE_OPTIONS = {
+  ...HOST_COOKIE_OPTIONS,
   name: '__Host-flash',
-  httpOnly: true,
-  secure: true,
-  sameSite: 'lax',
-  path: '/',
 } as const;
 
 const FLASH_MAX_AGE_SECONDS = MS_PER_MINUTE / MS_PER_SECOND;
 
 const flashSchema = z.object({
   id: z.uuid(),
-  kind: z.enum(['success', 'info']),
+  kind: z.enum(FLASH_KINDS),
   message: z.string().min(1),
 }) satisfies z.ZodType<Flash>;
 

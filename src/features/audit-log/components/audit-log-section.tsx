@@ -1,19 +1,19 @@
 import type { ReactNode } from 'react';
 import { PaginationNav } from '@/components/pagination-nav';
+import { AUDIT_LOG_ROLES } from '@/features/audit-log/audit-log.constants';
 import { listAuditLogs } from '@/features/audit-log/audit-log.data';
 import {
-  auditLogSearchQuery,
   auditLogSearchSchema,
   toListAuditLogsQuery,
 } from '@/features/audit-log/audit-log.util';
 import { AuditLogFilters } from '@/features/audit-log/components/audit-log-filters';
 import { AuditLogTable } from '@/features/audit-log/components/audit-log-table';
 import { requireRole } from '@/features/auth/auth.data';
-import { ROLE } from '@/lib/constants/role.constants';
 import { ROUTE } from '@/lib/constants/route.constants';
 import {
   parseSearchParams,
   type SearchParams,
+  toSearchQuery,
 } from '@/lib/utils/search-params.util';
 
 export async function AuditLogSection({
@@ -21,7 +21,7 @@ export async function AuditLogSection({
 }: {
   searchParams: SearchParams;
 }): Promise<ReactNode> {
-  await requireRole(ROLE.ADMIN);
+  await requireRole(AUDIT_LOG_ROLES);
 
   const { values, input, fieldErrors } = parseSearchParams(
     auditLogSearchSchema,
@@ -42,7 +42,7 @@ export async function AuditLogSection({
         pageCount={Math.ceil(meta.total / meta.limit)}
         href={(target) => ({
           pathname: ROUTE.ADMIN_AUDIT_LOGS,
-          query: auditLogSearchQuery(values, target),
+          query: toSearchQuery({ ...values, page: target }),
         })}
       />
     </div>

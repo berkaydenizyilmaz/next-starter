@@ -5,6 +5,7 @@ import { z } from 'zod';
 import type * as api from '@/lib/api';
 import { MS_PER_SECOND } from '@/lib/constants/time.constants';
 import { env } from '@/server/env';
+import { HOST_COOKIE_OPTIONS } from '@/server/host-cookie';
 import { requestLogger } from '@/server/logger';
 import type { IncomingHeaders } from '@/server/request-context';
 
@@ -20,23 +21,15 @@ const sessionSchema = z.object({
 
 export type Session = z.infer<typeof sessionSchema>;
 
-export interface SessionCookie {
-  name: string;
-  value: string;
-  httpOnly: boolean;
-  secure: boolean;
-  sameSite: 'lax';
-  path: string;
-  maxAge: number;
-}
-
 const SESSION_COOKIE_OPTIONS = {
+  ...HOST_COOKIE_OPTIONS,
   name: SESSION_COOKIE_NAME,
-  httpOnly: true,
-  secure: true,
-  sameSite: 'lax',
-  path: '/',
 } as const;
+
+export type SessionCookie = typeof SESSION_COOKIE_OPTIONS & {
+  value: string;
+  maxAge: number;
+};
 
 export async function sessionFromCookie({
   value,
@@ -47,15 +40,22 @@ export async function sessionFromCookie({
 }): Promise<Session | null> {
   if (!value) return null;
 
-  const log = await requestLogger(incoming);
+  let rejection: { reason: string; error: unknown } | undefined;
   const unsealed = await unsealData<unknown>(value, {
     password: env.SESSION_SECRET,
     onUnsealError: (reason, error) => {
-      if (reason !== 'expired') {
-        log.warn({ err: error, reason }, 'Session cookie rejected');
-      }
+      if (reason !== 'expired') rejection = { reason, error };
     },
   });
+
+  if (rejection) {
+    const log = await requestLogger(incoming);
+    log.warn(
+      { err: rejection.error, reason: rejection.reason },
+      'Session cookie rejected',
+    );
+  }
+
   const parsed = sessionSchema.safeParse(unsealed);
 
   return parsed.success ? parsed.data : null;

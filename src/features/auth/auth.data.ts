@@ -15,11 +15,7 @@ import { requestLogger } from '@/server/logger';
 
 export { clearSession };
 
-export interface CurrentUser {
-  id: string;
-  email: string;
-  role: api.Me['role'];
-}
+export type CurrentUser = Pick<api.Me, 'id' | 'email' | 'role'>;
 
 const SIGNED_OUT_STATUSES: ReadonlySet<number> = new Set([
   HTTP_STATUS.UNAUTHORIZED,
@@ -129,11 +125,18 @@ export async function getCurrentUser(): Promise<CurrentUser> {
   return user;
 }
 
+export function hasRole(
+  user: CurrentUser,
+  roles: readonly CurrentUser['role'][],
+): boolean {
+  return roles.includes(user.role);
+}
+
 export async function requireRole(
-  ...roles: CurrentUser['role'][]
+  roles: readonly CurrentUser['role'][],
 ): Promise<CurrentUser> {
   const user = await getCurrentUser();
-  if (!roles.includes(user.role)) notFound();
+  if (!hasRole(user, roles)) notFound();
 
   return user;
 }
